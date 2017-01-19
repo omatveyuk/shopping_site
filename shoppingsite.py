@@ -80,14 +80,12 @@ def show_shopping_cart():
     # been added to the session
 
     melon_objects = {}
-    subtotal = 0
     total = 0
 
     for melon in session["cart"]:
         inf_melon = melons.get_by_id(melon)
-        subtotal = inf_melon.price * session["cart"][melon]
-        inf_melon.subtotal = subtotal
-        total += subtotal
+        inf_melon.subtotal = inf_melon.price * session["cart"][melon]
+        total += inf_melon.subtotal
         melon_objects[melon] = inf_melon
 
     return render_template("cart.html",
@@ -114,12 +112,10 @@ def add_to_cart(melon_id):
     # - flash a success message
     # - redirect the user to the cart page
 
-    if session == {}:
+    if "cart" not in session:
         session["cart"] = {}
-        session["cart"][melon_id] = session["cart"].get(melon_id, 0) + 1
 
-    else:
-        session["cart"][melon_id] = session["cart"].get(melon_id, 0) + 1
+    session["cart"][melon_id] = session["cart"].get(melon_id, 0) + 1
 
     flash("Your melon has been successfully added")
     return redirect("/cart")
